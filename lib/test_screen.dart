@@ -11,6 +11,7 @@ class AppBarTitle extends ConsumerWidget {
     return Text(ref.translate('genders.title', fallback: 'Chọn giới tính'));
   }
 }
+
 class GenderButtons extends ConsumerWidget {
   const GenderButtons({super.key});
 
@@ -21,17 +22,17 @@ class GenderButtons extends ConsumerWidget {
       children: [
         ElevatedButton(
           onPressed: () {},
-          child: Text(ref.loc.translate('genders.male')),
+          child: Text(ref.translate('genders.male', fallback: 'Nam')),
         ),
         const SizedBox(height: 12),
         ElevatedButton(
           onPressed: () {},
-          child: Text(ref.loc.translate('genders.female')),
+          child: Text(ref.translate('genders.female', fallback: 'Nữ')),
         ),
         const SizedBox(height: 12),
         ElevatedButton(
           onPressed: () {},
-          child: Text(ref.loc.translate('genders.other')),
+          child: Text(ref.translate('genders.other', fallback: 'Khác')),
         ),
       ],
     );
@@ -53,15 +54,7 @@ class TestScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(ref.loc.translate('genders.language')),
-            GenderButtons(),
-          ],
-        ),
-      ),
+      body: Center(child: GenderButtons()),
     );
   }
 }
