@@ -50,7 +50,7 @@ class TestScreen extends ConsumerWidget {
         actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: LanguageSwitch(),
+            child: LanguageDropdown(),
           ),
         ],
       ),

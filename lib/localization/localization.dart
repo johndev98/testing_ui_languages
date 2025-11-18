@@ -25,9 +25,8 @@ class AppLocalizations {
   }
 }
 
-
-
 Future<Map<String, Map<String, dynamic>>> loadLocalizationData() async {
+  //thêm các tên file json ngôn ngữ khác ở đây
   const supportedLocales = ['en', 'vi'];
   final result = <String, Map<String, dynamic>>{};
 
