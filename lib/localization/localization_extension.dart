@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'localization.dart';
 
 extension LocalizationRef on WidgetRef {
@@ -11,6 +12,6 @@ extension LocalizationRef on WidgetRef {
   AppLocalizations? get locOrNull => watch(localizationProvider);
 
   String translate(String key, {String? fallback}) {
-    return locOrNull?.translate(key) ?? fallback ?? key;
+    return locOrNull?.translate(key, fallback: fallback) ?? fallback ?? key;
   }
 }

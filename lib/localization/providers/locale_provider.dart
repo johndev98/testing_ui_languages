@@ -12,7 +12,8 @@ class LocaleNotifier extends StateNotifier<String> {
   }
 }
 
-final localeNotifierProvider =
-    StateNotifierProvider<LocaleNotifier, String>((ref) {
+final localeNotifierProvider = StateNotifierProvider<LocaleNotifier, String>((
+  ref,
+) {
   throw UnimplementedError('Must override in main()');
 });

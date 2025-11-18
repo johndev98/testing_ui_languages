@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'providers/locale_provider.dart';
@@ -9,30 +10,39 @@ class AppLocalizations {
 
   AppLocalizations(this.locale, this._strings);
 
-  String translate(String key) {
-    final parts = key.split('.');
+  String translate(String key, {String? fallback}) {
+    final keys = key.split('.');
     dynamic value = _strings;
 
-    for (final p in parts) {
-      if (value is Map<String, dynamic> && value.containsKey(p)) {
-        value = value[p];
+    for (final k in keys) {
+      if (value is Map<String, dynamic> && value.containsKey(k)) {
+        value = value[k];
       } else {
-        return key;
+        return fallback ?? key; // 🔹 Trả về fallback nếu key không tồn tại
       }
     }
     return value.toString();
   }
 }
 
+
+
 Future<Map<String, Map<String, dynamic>>> loadLocalizationData() async {
   const supportedLocales = ['en', 'vi'];
   final result = <String, Map<String, dynamic>>{};
 
   for (final locale in supportedLocales) {
-    final jsonString = await rootBundle.loadString(
-      'assets/lang/json/$locale.json',
-    );
-    result[locale] = json.decode(jsonString) as Map<String, dynamic>;
+    try {
+      final jsonString = await rootBundle.loadString(
+        'assets/lang/json/$locale.json',
+      );
+
+      result[locale] = json.decode(jsonString) as Map<String, dynamic>;
+    } catch (e) {
+      // File không tồn tại → bỏ qua nhưng app vẫn chạy
+      debugPrint('⚠️ File localization không tồn tại: $locale.json');
+      result[locale] = {}; // hoặc bỏ dòng này nếu không muốn thêm key rỗng
+    }
   }
 
   return result;
