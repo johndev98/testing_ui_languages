@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'constants.dart';
 import 'providers/locale_provider.dart';
 
 class AppLocalizations {
@@ -26,8 +27,6 @@ class AppLocalizations {
 }
 
 Future<Map<String, Map<String, dynamic>>> loadLocalizationData() async {
-  //thêm các tên file json ngôn ngữ khác ở đây
-  const supportedLocales = ['en', 'vi'];
   final result = <String, Map<String, dynamic>>{};
 
   for (final locale in supportedLocales) {

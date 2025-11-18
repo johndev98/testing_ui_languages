@@ -1,9 +1,20 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'localization/constants.dart';
 import 'localization/locale_repository.dart';
 import 'localization/localization.dart';
 import 'localization/providers/locale_provider.dart';
 import 'myapp.dart';
+
+String detectSystemLocale(List<String> supportedLocales) {
+  final systemLocale = PlatformDispatcher.instance.locale.languageCode;
+  if (supportedLocales.contains(systemLocale)) {
+    return systemLocale;
+  }
+  return 'en'; // fallback
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,12 +22,14 @@ void main() async {
   final repo = LocaleRepository();
   final savedLocale = await repo.loadLocale();
 
+  // nếu chưa có savedLocale thì detect hệ thống
+  final defaultLocale = savedLocale ?? detectSystemLocale(supportedLocales);
   runApp(
     ProviderScope(
       overrides: [
         localizationMapProvider.overrideWithValue(AsyncData(localizationData)),
         localeNotifierProvider.overrideWith(
-          (ref) => LocaleNotifier(repo, savedLocale),
+          (ref) => LocaleNotifier(repo, defaultLocale),
         ),
       ],
       child: const MyApp(),
