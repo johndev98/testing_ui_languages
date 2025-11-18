@@ -1,0 +1,9 @@
+{
+  "genders":{
+    "title": "Select Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "language": "Language"
+  }
+}

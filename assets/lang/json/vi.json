@@ -1,0 +1,9 @@
+{
+  "genders":{
+    "title": "Chọn giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "other": "Khác",
+    "language": "Ngôn ngữ"
+  }
+}
