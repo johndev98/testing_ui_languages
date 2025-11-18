@@ -38,6 +38,7 @@ Future<Map<String, Map<String, dynamic>>> loadLocalizationData() async {
 
   return map;
 }
+
 final localizationMapProvider =
     FutureProvider<Map<String, Map<String, dynamic>>>(
       (ref) async => throw UnimplementedError(
@@ -62,4 +63,3 @@ final localizationProvider = Provider<AppLocalizations?>((ref) {
     error: (_, _) => null,
   );
 });
-
