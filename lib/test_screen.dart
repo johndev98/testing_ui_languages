@@ -8,10 +8,9 @@ class AppBarTitle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Text(ref.locOrNull?.translate('genders.title') ?? 'Chọn giới tính');
+    return Text(ref.translate('genders.title', fallback: 'Chọn giới tính'));
   }
 }
-
 class GenderButtons extends ConsumerWidget {
   const GenderButtons({super.key});
 

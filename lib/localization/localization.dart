@@ -1,8 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'locale_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'providers/locale_provider.dart';
 
 class AppLocalizations {
   final String locale;
@@ -11,12 +10,12 @@ class AppLocalizations {
   AppLocalizations(this.locale, this._strings);
 
   String translate(String key) {
-    final keys = key.split('.');
+    final parts = key.split('.');
     dynamic value = _strings;
 
-    for (final k in keys) {
-      if (value is Map<String, dynamic> && value.containsKey(k)) {
-        value = value[k];
+    for (final p in parts) {
+      if (value is Map<String, dynamic> && value.containsKey(p)) {
+        value = value[p];
       } else {
         return key;
       }
@@ -27,37 +26,31 @@ class AppLocalizations {
 
 Future<Map<String, Map<String, dynamic>>> loadLocalizationData() async {
   const supportedLocales = ['en', 'vi'];
-  final map = <String, Map<String, dynamic>>{};
+  final result = <String, Map<String, dynamic>>{};
 
   for (final locale in supportedLocales) {
     final jsonString = await rootBundle.loadString(
       'assets/lang/json/$locale.json',
     );
-    map[locale] = json.decode(jsonString);
+    result[locale] = json.decode(jsonString) as Map<String, dynamic>;
   }
 
-  return map;
+  return result;
 }
 
 final localizationMapProvider =
     FutureProvider<Map<String, Map<String, dynamic>>>(
-      (ref) async => throw UnimplementedError(
-        'Localization map must be overridden in main()',
-      ),
+      (ref) => throw UnimplementedError(),
     );
-
-final localeProvider = StateProvider<String>((ref) => 'vi');
-
-final localeRepositoryProvider = Provider((ref) => LocaleRepository());
 
 final localizationProvider = Provider<AppLocalizations?>((ref) {
   final asyncMap = ref.watch(localizationMapProvider);
+  final locale = ref.watch(localeNotifierProvider);
 
   return asyncMap.when(
     data: (map) {
-      final locale = ref.watch(localeProvider);
-      final strings = map[locale] ?? map['en'];
-      return strings == null ? null : AppLocalizations(locale, strings);
+      final strings = map[locale] ?? map['en']!;
+      return AppLocalizations(locale, strings);
     },
     loading: () => null,
     error: (_, _) => null,

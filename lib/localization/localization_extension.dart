@@ -3,12 +3,14 @@ import 'localization.dart';
 
 extension LocalizationRef on WidgetRef {
   AppLocalizations get loc {
-    final localization = watch(localizationProvider);
-    if (localization == null) {
-      throw Exception('Localization chưa sẵn sàng');
-    }
-    return localization;
+    final value = watch(localizationProvider);
+    if (value == null) throw Exception('Localization not loaded');
+    return value;
   }
-  // Nếu không dùng thêm cái này, thì nếu lỗi load json -> sẽ không hiển thị được gây crash
+
   AppLocalizations? get locOrNull => watch(localizationProvider);
+
+  String translate(String key, {String? fallback}) {
+    return locOrNull?.translate(key) ?? fallback ?? key;
+  }
 }
