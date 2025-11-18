@@ -8,11 +8,13 @@ import 'localization/localization.dart';
 import 'localization/providers/locale_provider.dart';
 import 'myapp.dart';
 
+// lấy ngôn ngữ hệ thống làm mặc định khi mở app đầu tiền.
 String detectSystemLocale(List<String> supportedLocales) {
   final systemLocale = PlatformDispatcher.instance.locale.languageCode;
   if (supportedLocales.contains(systemLocale)) {
     return systemLocale;
   }
+  // nếu ngôn ngữ hệ thông không có trong list ngôn ngữ của app thì mặc định trả về 'en'
   return 'en'; // fallback
 }
 
