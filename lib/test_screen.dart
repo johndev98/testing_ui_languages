@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'localization/localization_extension.dart';
+import 'show_fps.dart';
+import 'show_ram.dart';
 import 'widgets/language_switch.dart';
 
 class AppBarTitle extends ConsumerWidget {
@@ -54,7 +56,11 @@ class TestScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Center(child: GenderButtons()),
+      body: Center(
+        child: Column(
+          children: [GenderButtons(), AppUsageWidget(), FpsMonitor()],
+        ),
+      ),
     );
   }
 }
