@@ -356,25 +356,28 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   Widget _buildGoalPage() {
-    final double currentWeight = weight!;
+    // Đảm bảo weight có giá trị
+    final double currentWeight = weight ?? 60;
 
-    // Logic mới:
-    // 1. Nếu chưa có dữ liệu -> Khởi tạo theo cân nặng hiện tại.
+    // 1. Logic khởi tạo targetWeight (như đã sửa ở câu trước)
     if (targetWeight == null || goal == null) {
       targetWeight = currentWeight;
       goal = "maintain";
-    }
-    // 2. Nếu người dùng chọn "Giữ cân" nhưng targetWeight cũ bị lệch so với weight mới
-    // (do người dùng quay lại sửa cân nặng ở trang trước), thì cập nhật lại targetWeight.
-    else if (goal == "maintain" && targetWeight != currentWeight) {
+    } else if (goal == "maintain" && targetWeight != currentWeight) {
       targetWeight = currentWeight;
     }
 
-    // giảm tối đa 20kg, tăng tối đa 50kg
-    final double min = (currentWeight - 20).clamp(20, 300);
-    final double max = (currentWeight + 50).clamp(20, 300);
+    // 2. Logic Min/Max hợp lý theo % cơ thể
+    // Min: Cho phép giảm tối đa về 50% trọng lượng, nhưng không thấp hơn 35kg
+    double calculatedMin = (currentWeight * 0.5).clamp(35.0, currentWeight);
+    // Max: Cho phép tăng tối đa lên 150% trọng lượng, nhưng không quá 250kg
+    double calculatedMax = (currentWeight * 1.5).clamp(currentWeight, 250.0);
 
-    // tính chênh lệch
+    // Mở rộng ruler thêm 1 chút (-5/+5) để user không bị cảm giác kịch kim
+    int rulerMin = ((calculatedMin - 5).clamp(30.0, 300.0) * 2).toInt();
+    int rulerMax = ((calculatedMax + 5).clamp(30.0, 300.0) * 2).toInt();
+
+    // 3. Tính chênh lệch để hiển thị text
     double diff = (targetWeight! - currentWeight).abs();
 
     String topTitle() {
@@ -393,7 +396,6 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              /// 🔵 Text phía trên ruler
               Text(
                 topTitle(),
                 style: const TextStyle(
@@ -401,21 +403,21 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-
               const SizedBox(height: 20),
 
-              /// 🔵 Ruler slider
               FlutterRulerSlider(
-                minValue: (min * 2).toInt(),
-                maxValue: (max * 2).toInt(),
+                minValue: rulerMin,
+                maxValue: rulerMax,
                 initialValue: ((targetWeight ?? currentWeight) * 2).toInt(),
                 width: 300,
-                interval: 20, // mỗi vạch lớn = 10kg
-                smallerInterval: 1, // mỗi vạch nhỏ = 0.5kg
+                interval:
+                    10, // Sửa interval thành 10 để đỡ rối mắt nếu dải rộng
+                smallerInterval: 1,
                 snapping: true,
                 showLabels: false,
                 showSubLabels: false,
-                tickSpacing: 15,
+                tickSpacing:
+                    15, // Có thể cần điều chỉnh spacing nếu dải quá dài
                 ticksAlignment: TicksAlignment.center,
                 labelAlignment: LabelAlignment.bottom,
                 tickStyle: const TicksStyle(
@@ -428,22 +430,23 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 ),
                 onValueChanged: (val) {
                   setState(() {
-                    targetWeight = val / 2.0;
+                    // Clamp lại giá trị lần nữa để đảm bảo an toàn
+                    double newTarget = val / 2.0;
 
-                    if (targetWeight == currentWeight) {
+                    // Logic xác định goal
+                    if (newTarget == currentWeight) {
                       goal = "maintain";
-                    } else if (targetWeight! < currentWeight) {
+                    } else if (newTarget < currentWeight) {
                       goal = "lose";
                     } else {
                       goal = "gain";
                     }
+                    targetWeight = newTarget;
                   });
                 },
               ),
 
               const SizedBox(height: 20),
-
-              /// 🔵 Text dưới ruler (hiển thị số kg đang chọn)
               Text(
                 "${targetWeight!.toStringAsFixed(1)} kg",
                 style: const TextStyle(
@@ -454,8 +457,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             ],
           ),
         ),
-
-        /// 🔵 Nút điều hướng
+        // ... (Phần nút bấm giữ nguyên)
         Padding(
           padding: const EdgeInsets.only(bottom: 20),
           child: Row(
@@ -481,14 +483,9 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 onPressed: goal != null
                     ? () {
                         if (goal == "maintain") {
-                          // Skip speed page
-                          if (_controller.hasClients) {
-                            _controller.jumpToPage(
-                              6,
-                            ); // nhảy thẳng tới diet page
-                          }
+                          if (_controller.hasClients) _controller.jumpToPage(6);
                         } else {
-                          nextPage(); // đi page speed như bình thường
+                          nextPage();
                         }
                       }
                     : null,
