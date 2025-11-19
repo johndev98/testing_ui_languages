@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_ruler_slider/flutter_ruler_slider.dart';
 import 'package:ui_calo_app/ui/sumary_screen.dart';
 
@@ -24,7 +23,6 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   bool isKg = true; // mặc định kg
   bool isCm = true; // mặc định cm
   double? speed; // kg/week
-
   void nextPage() {
     _controller.nextPage(
       duration: const Duration(milliseconds: 300),
@@ -128,6 +126,9 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   Widget _buildWeightPage() {
+    // đặt giá trị mặc định nếu chưa có
+    weight ??= 60;
+
     return Column(
       children: [
         Expanded(
@@ -355,10 +356,14 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   Widget _buildGoalPage() {
-    final double currentWeight = weight ?? 60;
+    final double currentWeight = weight!;
 
-    // đặt mặc định nếu chưa có
-    targetWeight ??= currentWeight;
+    // Luôn đặt targetWeight bằng currentWeight khi vào trang này lần đầu
+    // (chỉ giữ targetWeight cũ nếu người dùng đã thay đổi nó)
+    if (targetWeight == null || goal == null) {
+      targetWeight = currentWeight;
+      goal = "maintain";
+    }
 
     // giảm tối đa 20kg, tăng tối đa 50kg
     final double min = (currentWeight - 20).clamp(20, 300);
@@ -665,10 +670,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
     // Nếu đang ở Diet page và goal == maintain, quay lại Goal page thay vì Speed page
     if (currentIndex == 6 && goal == "maintain") {
-      _controller.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      ); // quay về Goal page index 4
+      _controller.jumpToPage(4); // nhảy thẳng về Goal page (index 4)
     } else {
       _controller.previousPage(
         duration: const Duration(milliseconds: 300),
