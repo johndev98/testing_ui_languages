@@ -358,11 +358,16 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   Widget _buildGoalPage() {
     final double currentWeight = weight!;
 
-    // Luôn đặt targetWeight bằng currentWeight khi vào trang này lần đầu
-    // (chỉ giữ targetWeight cũ nếu người dùng đã thay đổi nó)
+    // Logic mới:
+    // 1. Nếu chưa có dữ liệu -> Khởi tạo theo cân nặng hiện tại.
     if (targetWeight == null || goal == null) {
       targetWeight = currentWeight;
       goal = "maintain";
+    }
+    // 2. Nếu người dùng chọn "Giữ cân" nhưng targetWeight cũ bị lệch so với weight mới
+    // (do người dùng quay lại sửa cân nặng ở trang trước), thì cập nhật lại targetWeight.
+    else if (goal == "maintain" && targetWeight != currentWeight) {
+      targetWeight = currentWeight;
     }
 
     // giảm tối đa 20kg, tăng tối đa 50kg
