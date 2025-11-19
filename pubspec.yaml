@@ -12,6 +12,7 @@ dependencies:
   flutter_riverpod: ^3.0.3
   path_provider: ^2.1.5
   shared_preferences: ^2.5.3
+  flutter_ruler_slider: ^0.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter

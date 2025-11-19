@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'localization/providers/locale_provider.dart';
-import 'test_screen.dart';
+import 'ui/onboarding_flow.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -10,10 +10,10 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeNotifierProvider);
 
-    return MaterialApp(
+    return CupertinoApp(
       debugShowCheckedModeBanner: false,
       locale: Locale(locale),
-      home: const TestScreen(),
+      home: const OnboardingFlow(),
     );
   }
 }

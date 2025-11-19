@@ -150,6 +150,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  flutter_ruler_slider:
+    dependency: "direct main"
+    description:
+      name: flutter_ruler_slider
+      sha256: "9795e8839b39178b7019500ad0ec0abb5c0a15ba903b4b5a51c0d1fae0d829ed"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   flutter_test:
     dependency: "direct dev"
     description: flutter
