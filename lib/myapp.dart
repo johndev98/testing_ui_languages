@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ui_calo_app/test_screen.dart';
 import 'localization/providers/locale_provider.dart';
+import 'ui/login_screen.dart';
 import 'ui/onboarding_flow.dart';
 
 class MyApp extends ConsumerWidget {
@@ -13,7 +15,7 @@ class MyApp extends ConsumerWidget {
     return CupertinoApp(
       debugShowCheckedModeBanner: false,
       locale: Locale(locale),
-      home: const OnboardingFlow(),
+      home: const LoginScreen(),
     );
   }
 }

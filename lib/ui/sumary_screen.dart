@@ -113,9 +113,9 @@ class _SummaryScreenState extends State<SummaryScreen> {
     final double bmi = widget.weight / pow(heightM, 2);
 
     String bmiStatus;
-    if (bmi < 18.5)
+    if (bmi < 18.5) {
       bmiStatus = "Thiếu cân";
-    else if (bmi < 25)
+    } else if (bmi < 25)
       bmiStatus = "Bình thường";
     else if (bmi < 30)
       bmiStatus = "Thừa cân";
@@ -296,7 +296,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: CupertinoColors.systemYellow.withOpacity(0.2),
+                          color: CupertinoColors.systemYellow.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
