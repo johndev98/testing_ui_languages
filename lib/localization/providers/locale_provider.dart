@@ -1,4 +1,5 @@
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../locale_repository.dart';
 
 class LocaleNotifier extends StateNotifier<String> {

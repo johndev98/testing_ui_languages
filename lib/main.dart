@@ -28,7 +28,7 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        localizationMapProvider.overrideWithValue(AsyncData(localizationData)),
+        localizationMapProvider.overrideWith((ref) => localizationData),
         localeNotifierProvider.overrideWith(
           (ref) => LocaleNotifier(repo, defaultLocale),
         ),
