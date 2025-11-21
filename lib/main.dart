@@ -5,6 +5,7 @@ import 'localization/constants.dart';
 import 'localization/locale_repository.dart';
 import 'localization/localization.dart';
 import 'localization/providers/locale_provider.dart';
+import 'onboarding/services/isar_service.dart';
 import 'myapp.dart';
 
 // lấy ngôn ngữ hệ thống làm mặc định khi mở app đầu tiền.
@@ -19,6 +20,10 @@ String detectSystemLocale(List<String> supportedLocales) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Pre-load user profile to ensure router has correct initial location
+  await IsarService.openDB();
+  
   final localizationData = await loadLocalizationData();
   final repo = LocaleRepository();
   final savedLocale = await repo.loadLocale();
